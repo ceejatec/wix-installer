@@ -1,0 +1,4 @@
+Files.wxs
+*.msi
+*.wixobj
+*.wixpdb
