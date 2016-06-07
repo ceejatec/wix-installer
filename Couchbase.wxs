@@ -24,11 +24,9 @@
       </Directory>
     </Directory>
 
-    <Feature Id="Complete" Level="1" Description="The Complete Package."
-        Display="expand" ConfigurableDirectory="INSTALLDIR">
-      <Feature Id="MainProgram" Title="Program" Description="The Main Executable." Level="1">
-        <ComponentGroupRef Id="CouchbaseServer"/>
-      </Feature>
+    <Feature Id="Complete" Level="1" Title="Couchbase Server" Description="The Complete Package."
+        ConfigurableDirectory="INSTALLDIR">
+      <ComponentGroupRef Id="CouchbaseServer"/>
     </Feature>
 
     <UIRef Id="WixUI_Mondo"/>
