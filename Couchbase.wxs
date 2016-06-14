@@ -30,12 +30,15 @@
     </Feature>
 
     <!-- Fire off a command after copying files -->
-    <Property Id="NOTEPAD">Notepad.exe</Property>
-    <CustomAction Id="LaunchNotepad" Property="NOTEPAD" ExeCommand="" Return="check"/>
+    <CustomAction Id="FixConfig" FileKey="fnr.exe" Return="check"
+       ExeCommand='--cl --fileMask static_config --dir &quot;[INSTALLDIR]etc\couchbase&quot; --find &quot;C:/Jenkins/workspace/couchbase-server-windows/install/&quot; --replace &quot;[INSTALLDIR]\&quot;'/>
+    <CustomAction Id="FixConfigSlash" FileKey="fnr.exe" Return="check"
+       ExeCommand='--cl --fileMask static_config --dir &quot;[INSTALLDIR]etc\couchbase&quot; --find &quot;\\&quot; --replace &quot;/&quot;'/>
 
     <InstallExecuteSequence>
-      <!-- Launch Notepad, but only on Install, not uninstall -->
-      <Custom Action="LaunchNotepad" After="InstallFinalize"></Custom>
+      <!-- Fix Config files, but only on Install, not uninstall -->
+      <Custom Action="FixConfig" After="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="FixConfigSlash" After="FixConfig">NOT Installed</Custom>
     </InstallExecuteSequence>
 
     <!-- Load in "Mondo" UI toolkit -->
