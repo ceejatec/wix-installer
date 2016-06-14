@@ -29,6 +29,16 @@
       <ComponentGroupRef Id="CouchbaseServer"/>
     </Feature>
 
+    <!-- Fire off a command after copying files -->
+    <Property Id="NOTEPAD">Notepad.exe</Property>
+    <CustomAction Id="LaunchNotepad" Property="NOTEPAD" ExeCommand="" Return="check"/>
+
+    <InstallExecuteSequence>
+      <!-- Launch Notepad, but only on Install, not uninstall -->
+      <Custom Action="LaunchNotepad" After="InstallFinalize"></Custom>
+    </InstallExecuteSequence>
+
+    <!-- Load in "Mondo" UI toolkit -->
     <UIRef Id="WixUI_Mondo"/>
     <UIRef Id="WixUI_ErrorProgressText"/>
 
