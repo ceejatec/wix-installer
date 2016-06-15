@@ -29,16 +29,14 @@
       <ComponentGroupRef Id="CouchbaseServer"/>
     </Feature>
 
-    <!-- Fire off a command after copying files -->
-    <CustomAction Id="FixConfig" FileKey="fnr.exe" Return="check"
-       ExeCommand='--cl --fileMask static_config --dir &quot;[INSTALLDIR]etc\couchbase&quot; --find &quot;C:/Jenkins/workspace/couchbase-server-windows/install/&quot; --replace &quot;[INSTALLDIR]\&quot;'/>
-    <CustomAction Id="FixConfigSlash" FileKey="fnr.exe" Return="check"
-       ExeCommand='--cl --fileMask static_config --dir &quot;[INSTALLDIR]etc\couchbase&quot; --find &quot;\\&quot; --replace &quot;/&quot;'/>
+    <!-- Custom action to invoke batch script -->
+    <Property Id="CMD" Value="cmd.exe"/>
+    <CustomAction Id="FixConfig" Property="CMD" Return="check"
+      ExeCommand="/c &quot;&quot;[INSTALLDIR]\bin\fixpaths.bat&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
 
     <InstallExecuteSequence>
       <!-- Fix Config files, but only on Install, not uninstall -->
       <Custom Action="FixConfig" After="InstallFinalize">NOT Installed</Custom>
-      <Custom Action="FixConfigSlash" After="FixConfig">NOT Installed</Custom>
     </InstallExecuteSequence>
 
     <!-- Load in "Mondo" UI toolkit -->
