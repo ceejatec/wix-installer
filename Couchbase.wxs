@@ -30,12 +30,12 @@
     </Feature>
 
     <!-- Custom action to invoke batch script -->
-    <Property Id="CMD" Value="cmd.exe"/>
-    <CustomAction Id="FixConfig" Property="CMD" Return="check"
-      ExeCommand="/c &quot;&quot;[INSTALLDIR]\bin\fixpaths.bat&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
+    <CustomAction Id="FixConfigCmd" Property="QtExec64CmdLine" Value="cmd.exe /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.bat&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
+    <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
 
     <InstallExecuteSequence>
       <!-- Fix Config files, but only on Install, not uninstall -->
+      <Custom Action="FixConfigCmd" Before="FixConfig">NOT Installed</Custom>
       <Custom Action="FixConfig" After="InstallFinalize">NOT Installed</Custom>
     </InstallExecuteSequence>
 
