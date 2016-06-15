@@ -28,14 +28,24 @@
       <ComponentGroupRef Id="CouchbaseServer"/>
     </Feature>
 
-    <!-- Custom action to invoke batch script -->
+    <!-- Custom action to fix up config files based on installation dir -->
     <CustomAction Id="FixConfigCmd" Property="QtExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
     <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
 
+    <!-- Custom action to install the Erlang service -->
+    <CustomAction Id="InstallServiceCmd" Property="QtExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_register.bat&quot;"/>
+    <CustomAction Id="InstallService" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
+
     <InstallExecuteSequence>
-      <!-- Fix Config files, but only on Install, not uninstall -->
-      <Custom Action="FixConfigCmd" Before="FixConfig">NOT Installed</Custom>
-      <Custom Action="FixConfig" After="InstallFinalize">NOT Installed</Custom>
+      <!-- All actions to perform on Install, not Uninstall -->
+
+      <!-- Fix Config files -->
+      <Custom Action="FixConfigCmd" After="InstallFinalize">NOT Installed</Custom>
+      <Custom Action="FixConfig" After="FixConfigCmd">NOT Installed</Custom>
+
+      <!-- Install Service -->
+      <Custom Action="InstallServiceCmd" After="FixConfig">NOT Installed</Custom>
+      <Custom Action="InstallService" After="FixConfigCmd">NOT Installed</Custom>
     </InstallExecuteSequence>
 
     <!-- Load in "Mondo" UI toolkit -->
