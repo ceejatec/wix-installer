@@ -1,10 +1,9 @@
 ﻿<?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
 
-  <Product Name="Couchbase Server 4.5.0" Manufacturer="Couchbase Inc."
-      Id="7962BF33-3BD4-E564-9DFE-E3CA50FF0AD7"
+  <Product Id="*" Name="Couchbase Server 4.5.0" Version="4.5.0" Manufacturer="Couchbase Inc."
       UpgradeCode="01510917-D2BC-91D4-FD65-4743E498A007"
-      Language="1033" Codepage="1252" Version="4.5.0">
+      Language="1033" Codepage="1252">
 
     <Package Id="*" Keywords="Installer" Description="Couchbase Server 4.5.0 Installer"
         Comments="Couchbase is a registered trademark of Couchbase Inc."
@@ -30,7 +29,7 @@
     </Feature>
 
     <!-- Custom action to invoke batch script -->
-    <CustomAction Id="FixConfigCmd" Property="QtExec64CmdLine" Value="cmd.exe /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.bat&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
+    <CustomAction Id="FixConfigCmd" Property="QtExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
     <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
 
     <InstallExecuteSequence>
