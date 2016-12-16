@@ -29,12 +29,12 @@
     </Feature>
 
     <!-- Custom action to fix up config files based on installation dir -->
-    <CustomAction Id="FixConfigCmd" Property="QtExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
-    <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
+    <CustomAction Id="FixConfigCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
+    <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
     <!-- Custom action to install the Erlang service -->
-    <CustomAction Id="InstallServiceCmd" Property="QtExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_register.bat&quot;"/>
-    <CustomAction Id="InstallService" BinaryKey="WixCA" DllEntry="CAQuietExec64" Return="check"/>
+    <CustomAction Id="InstallServiceCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_register.bat&quot;"/>
+    <CustomAction Id="InstallService" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
     <InstallExecuteSequence>
       <!-- All actions to perform on Install, not Uninstall -->
