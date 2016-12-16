@@ -57,8 +57,9 @@
 
     </InstallExecuteSequence>
 
-    <!-- Load in "Mondo" UI toolkit -->
-    <UIRef Id="WixUI_Mondo"/>
+    <!-- Load in "InstallDir" UI toolkit -->
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
+    <UIRef Id="WixUI_InstallDir"/>
     <UIRef Id="WixUI_ErrorProgressText"/>
 
   </Product>
