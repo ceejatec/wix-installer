@@ -32,9 +32,13 @@
     <CustomAction Id="FixConfigCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;"/>
     <CustomAction Id="FixConfig" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
-    <!-- Custom action to install the Erlang service -->
-    <CustomAction Id="InstallServiceCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_register.bat&quot;"/>
-    <CustomAction Id="InstallService" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
+    <!-- Custom action to register the Erlang service -->
+    <CustomAction Id="RegisterServiceCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;C:\Fred\bin\service_register.bat&quot;"/>
+    <CustomAction Id="RegisterService" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
+
+    <!-- Custom action to unregister the Erlang service -->
+    <CustomAction Id="UnregisterServiceCmd" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;C:\Fred\bin\service_unregister.bat&quot;"/>
+    <CustomAction Id="UnregisterService" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
     <InstallExecuteSequence>
       <!-- All actions to perform on Install, not Uninstall -->
@@ -43,9 +47,14 @@
       <Custom Action="FixConfigCmd" After="InstallFinalize">NOT Installed</Custom>
       <Custom Action="FixConfig" After="FixConfigCmd">NOT Installed</Custom>
 
-      <!-- Install Service -->
-      <Custom Action="InstallServiceCmd" After="FixConfig">NOT Installed</Custom>
-      <Custom Action="InstallService" After="FixConfigCmd">NOT Installed</Custom>
+      <!-- Unregister Service - do when REMOVE set, ie. Uninstall or Major Upgrade-->
+      <Custom Action="UnregisterServiceCmd" After="FixConfig">REMOVE</Custom>
+      <Custom Action="UnregisterService" After="UnregisterServiceCmd">REMOVE</Custom>
+
+      <!-- Register Service - do when not installed, ie. fresh install (QQQ will this work on Major Upgrade?) -->
+      <Custom Action="RegisterServiceCmd" After="UnregisterService">NOT Installed</Custom>
+      <Custom Action="RegisterService" After="RegisterServiceCmd">NOT Installed</Custom>
+
     </InstallExecuteSequence>
 
     <!-- Load in "Mondo" UI toolkit -->
