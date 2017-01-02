@@ -1,6 +1,7 @@
 set srcpath=C:\bits\couchbase\install
 
 copy fixpaths.cmd %srcpath%\bin
+copy CouchbaseEnterpriseLicense.rtf %srcpath
 
 heat dir %srcpath% -srd -suid -gg -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
 candle -arch x64 *.wxs || goto :error
