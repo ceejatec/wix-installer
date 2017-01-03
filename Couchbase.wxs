@@ -41,18 +41,18 @@
     <CustomAction Id="UnregisterService" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
     <InstallExecuteSequence>
+      <!-- Unregister Service - do when REMOVE set, ie. Uninstall or Major Upgrade-->
+      <Custom Action="UnregisterServiceCmd" Before="InstallInitialize">REMOVE</Custom>
+      <Custom Action="UnregisterService" After="UnregisterServiceCmd">REMOVE</Custom>
+
       <!-- All actions to perform on Install, not Uninstall -->
 
       <!-- Fix Config files -->
       <Custom Action="FixConfigCmd" After="InstallFinalize">NOT Installed</Custom>
       <Custom Action="FixConfig" After="FixConfigCmd">NOT Installed</Custom>
 
-      <!-- Unregister Service - do when REMOVE set, ie. Uninstall or Major Upgrade-->
-      <Custom Action="UnregisterServiceCmd" After="FixConfig">REMOVE</Custom>
-      <Custom Action="UnregisterService" After="UnregisterServiceCmd">REMOVE</Custom>
-
       <!-- Register Service - do when not installed, ie. fresh install (QQQ will this work on Major Upgrade?) -->
-      <Custom Action="RegisterServiceCmd" After="UnregisterService">NOT Installed</Custom>
+      <Custom Action="RegisterServiceCmd" After="FixConfig">NOT Installed</Custom>
       <Custom Action="RegisterService" After="RegisterServiceCmd">NOT Installed</Custom>
 
     </InstallExecuteSequence>
