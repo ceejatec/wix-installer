@@ -45,8 +45,8 @@
 
     <InstallExecuteSequence>
       <!-- Unregister Service - do when REMOVE set, ie. Uninstall or Major Upgrade-->
-      <Custom Action="UnregisterServiceCmd" Before="InstallInitialize">REMOVE</Custom>
-      <Custom Action="UnregisterService" After="UnregisterServiceCmd">REMOVE</Custom>
+      <Custom Action="UnregisterServiceCmd" Before="UnregisterService">REMOVE</Custom>
+      <Custom Action="UnregisterService" Before="InstallValidate">REMOVE</Custom>
 
       <!-- All actions to perform on Install, not Uninstall -->
 
