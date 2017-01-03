@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define Company = "Couchbase"?>
+  <?define ProductName = "Server"?>
+  <?define Version = "4.7.0"?>
+</Include>
