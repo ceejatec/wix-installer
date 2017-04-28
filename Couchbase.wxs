@@ -15,6 +15,14 @@
     <Media Id="1" Cabinet="Couchbase.cab" EmbedCab="yes" DiskPrompt="Only file"/>
     <Property Id="DiskPrompt" Value="$(var.Company) $(var.ProductName) $(var.Version) Installation [1]"/>
 
+    <!-- Icon for Add/Remove dialog -->
+    <Icon Id="icon.ico" SourceFile="$(sys.CURRENTDIR)\assets\couchbase.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="http://www.couchbase.com/"/>
+
+    <!-- Graphics for installer itself -->
+    <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\assets\cb_installer_bg.jpg"/>
+
     <MajorUpgrade
         DowngradeErrorMessage="A later version of $(var.Company) $(var.ProductName) is already installed. Setup will now exit."/>
 

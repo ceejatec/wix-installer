@@ -1,4 +1,4 @@
-set destdir=%1
+set destdir=%~dp0\testing
 
 copy fixpaths.cmd %destdir%\bin
 copy fnr.exe %destdir%\bin
