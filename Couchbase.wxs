@@ -45,53 +45,13 @@
     <SetProperty Id="FixConfig" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;" Before="FixConfig" Sequence="execute"/>
     <CustomAction Id="FixConfig" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
-    <!-- Custom action to register the Erlang service -->
-    <SetProperty Id="RegisterService" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_register.bat&quot;" Before="RegisterService" Sequence="execute"/>
-    <CustomAction Id="RegisterService" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
-
-    <!-- Custom action to start the Erlang service -->
-    <SetProperty Id="StartService" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_start.bat&quot;" Before="StartService" Sequence="execute"/>
-    <CustomAction Id="StartService" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
-
-    <!-- Custom action to stop the Erlang service - this one must -->
-    <!-- NOT be deferred, as it needs to actually execute prior to the -->
-    <!-- InstallValidate step to prevent a reboot prompt. We ignore the -->
-    <!-- return value; we don't want an error to prevent uninstallation. -->
-    <!-- This is technically naughty as we should not "modify the system" -->
-    <!-- outside the InstallValidate/InstallFinalize pair, but it was the -->
-    <!-- only solution I could find to work. Since we ignore the return -->
-    <!-- value, it should not cause the Installer system to leave things -->
-    <!-- in a broken state; the worst that will happen is that if the -->
-    <!-- uninstall fails for some other reason, the CouchbaseServer Service -->
-    <!-- will remain stopped. -->
-    <CustomAction Id="StopServiceCmd" Execute="immediate" Property="WixQuietExec64CmdLine" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_stop.bat&quot;"/>
-    <CustomAction Id="StopService" Execute="immediate" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="ignore"/>
-
-    <!-- Custom action to unregister the Erlang service - this can be -->
-    <!-- deferred to possibly allow for better rollback -->
-    <SetProperty Id="UnregisterService" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\service_unregister.bat&quot;" Before="UnregisterService" Sequence="execute"/>
-    <CustomAction Id="UnregisterService" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
-
     <InstallExecuteSequence>
       <!-- Actions to do when REMOVE set, ie. Uninstall or Major Upgrade -->
-
-      <!-- Stop Service -->
-      <Custom Action="StopServiceCmd" Before="StopService">REMOVE</Custom>
-      <Custom Action="StopService" Before="InstallValidate">REMOVE</Custom>
-
-      <!-- Unregister Service -->
-      <Custom Action="UnregisterService" Before="RemoveFiles">REMOVE</Custom>
 
       <!-- Actions to do when not installed, ie. fresh Install or Major Upgrade -->
 
       <!-- Fix Config files -->
       <Custom Action="FixConfig" After="InstallFiles">NOT Installed</Custom>
-
-      <!-- Register Service -->
-      <Custom Action="RegisterService" After="FixConfig">NOT Installed</Custom>
-
-      <!-- Start Service -->
-      <Custom Action="StartService" After="RegisterService">NOT Installed</Custom>
 
     </InstallExecuteSequence>
 
