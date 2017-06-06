@@ -15,6 +15,19 @@
     <Media Id="1" Cabinet="Couchbase.cab" EmbedCab="yes" DiskPrompt="Only file"/>
     <Property Id="DiskPrompt" Value="$(var.Company) $(var.ProductName) $(var.Version) Installation [1]"/>
 
+    <!-- Search for ucrtbase.dll to identify whether Universal CRT is on target -->
+    <Property Id="UCRT32EXISTS">
+      <DirectorySearch Id="CheckUcrt32Dir" Path="[SystemFolder]" Depth="0">
+        <FileSearch Id="CheckUcrt32" Name="ucrrtbase.dll"/>
+      </DirectorySearch>
+    </Property>
+    <Property Id="UCRT64EXISTS">
+      <DirectorySearch Id="CheckUcrt64Dir" Path="[System64Folder]" Depth="0">
+        <FileSearch Id="CheckUcrt64" Name="ucrrtbase.dll"/>
+      </DirectorySearch>
+    </Property>
+    <Condition Message="To install Couchbase Server, the Microsoft Universal C Runtime must be installed. This is delivered by Microsoft via Windows Update. Please ensure your system is up to date. For more detailed installation instructions, see http://bitly.com/2j8mZtT .">UCRT32EXISTS OR UCRT64EXISTS</Condition>
+
     <!-- Icon for Add/Remove dialog -->
     <Icon Id="icon.ico" SourceFile="$(sys.CURRENTDIR)\assets\couchbase.ico"/>
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
@@ -23,7 +36,7 @@
     <!-- Graphics for installer itself -->
     <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\assets\cb_installer_bg.jpg"/>
 
-    <MajorUpgrade
+    <MajorUpgrade Schedule="afterInstallExecute"
         DowngradeErrorMessage="A later version of $(var.Company) $(var.ProductName) is already installed. Setup will now exit."/>
 
     <Directory Id="TARGETDIR" Name="SourceDir">

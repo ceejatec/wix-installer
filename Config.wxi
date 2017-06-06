@@ -2,5 +2,4 @@
 <Include>
   <?define Company = "Couchbase"?>
   <?define ProductName = "Server"?>
-  <?define Version = "5.0.0"?>
 </Include>
