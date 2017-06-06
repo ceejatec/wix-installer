@@ -1,8 +1,11 @@
 set destdir500=%~dp0\testing-5.0.0
 set destdir501=%~dp0\testing-5.0.1
 
-copy fixpaths.cmd %destdir500%\bin
-copy fnr.exe %destdir500%\bin
+rmdir /s /q build
+rmdir /s /q dist
+python fixpaths-setup.py py2exe
+rmdir /s /q build
+copy dist\* testing-5.0.0\bin\*
 
 heat dir %destdir500% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
 candle -arch x64 -dVersion=5.0.0 *.wxs || goto :error
@@ -11,8 +14,7 @@ light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -dWixUILicenseRt
 del *.wixobj
 copy Files.wxs Files.bak
 
-copy fixpaths.cmd %destdir501%\bin
-copy fnr.exe %destdir501%\bin
+copy dist\* testing-5.0.1\bin\*
 
 heat dir %destdir501% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
 candle -arch x64 -dVersion=5.0.1 *.wxs || goto :error
