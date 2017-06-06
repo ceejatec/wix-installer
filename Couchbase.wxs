@@ -18,12 +18,12 @@
     <!-- Search for ucrtbase.dll to identify whether Universal CRT is on target -->
     <Property Id="UCRT32EXISTS">
       <DirectorySearch Id="CheckUcrt32Dir" Path="[SystemFolder]" Depth="0">
-        <FileSearch Id="CheckUcrt32" Name="ucrrtbase.dll"/>
+        <FileSearch Id="CheckUcrt32" Name="ucrtbase.dll"/>
       </DirectorySearch>
     </Property>
     <Property Id="UCRT64EXISTS">
       <DirectorySearch Id="CheckUcrt64Dir" Path="[System64Folder]" Depth="0">
-        <FileSearch Id="CheckUcrt64" Name="ucrrtbase.dll"/>
+        <FileSearch Id="CheckUcrt64" Name="ucrtbase.dll"/>
       </DirectorySearch>
     </Property>
     <Condition Message="To install Couchbase Server, the Microsoft Universal C Runtime must be installed. This is delivered by Microsoft via Windows Update. Please ensure your system is up to date. For more detailed installation instructions, see http://bitly.com/2j8mZtT .">UCRT32EXISTS OR UCRT64EXISTS</Condition>
@@ -63,8 +63,8 @@
     </Feature>
 
     <!-- Custom action to fix up config files based on installation dir -->
-    <SetProperty Id="FixConfig" Value="&quot;[SystemFolder]cmd.exe&quot; /c &quot;&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;&quot;" Before="FixConfig" Sequence="execute"/>
-    <CustomAction Id="FixConfig" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
+    <SetProperty Id="FixConfig" Value="&quot;[INSTALLDIR]\bin\fixpaths.cmd&quot; &quot;[INSTALLDIR]&quot;" Before="FixConfig" Sequence="execute"/>
+    <CustomAction Id="FixConfig" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec" Return="check"/>
 
     <InstallExecuteSequence>
       <!-- Actions to do when REMOVE set, ie. Uninstall or Major Upgrade -->
