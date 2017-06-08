@@ -64,11 +64,17 @@
 
     <!-- Custom action to fix up config files based on installation dir -->
     <!-- See fixpaths.py for explanation of the FOO here -->
-    <SetProperty Id="FixConfig" Value="&quot;[INSTALLDIR]\bin\fixpaths.exe&quot; &quot;[INSTALLDIR]FOO&quot;" Before="FixConfig" Sequence="execute"/>
+    <SetProperty Id="FixConfig" Value="&quot;[INSTALLDIR]bin\fixpaths.exe&quot; &quot;[INSTALLDIR]FOO&quot;" Before="FixConfig" Sequence="execute"/>
     <CustomAction Id="FixConfig" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
+    <!-- Custom action to backup var dir -->
+    <SetProperty Id="BackupVar" Value="&quot;[INSTALLDIR]bin\backup-var.exe&quot; &quot;[INSTALLDIR]FOO&quot;" Before="BackupVar" Sequence="execute"/>
+    <CustomAction Id="BackupVar" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
     <InstallExecuteSequence>
       <!-- Actions to do when REMOVE set, ie. Uninstall or Major Upgrade -->
+
+      <!-- Actions to do when REMOVE set but *not* an Upgrade -->
+      <Custom Action="BackupVar" Before="RemoveFiles">REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE</Custom>
 
       <!-- Actions to do when not installed, ie. fresh Install or Major Upgrade -->
 

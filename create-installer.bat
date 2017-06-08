@@ -4,6 +4,7 @@ set destdir501=%~dp0\testing-5.0.1
 rmdir /s /q build
 rmdir /s /q dist
 python fixpaths-setup.py py2exe
+python backup-var-setup.py py2exe
 rmdir /s /q build
 copy dist\* testing-5.0.0\bin\*
 
