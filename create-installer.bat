@@ -5,6 +5,11 @@ rmdir /s /q build
 rmdir /s /q dist
 python installer-util-setup.py py2exe || goto :error
 rmdir /s /q build
+
+pushd testing-5.0.0
+git clean -dfx .
+popd
+
 copy dist\* testing-5.0.0\bin\*
 
 heat dir %destdir500% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
@@ -13,6 +18,10 @@ light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -dWixUILicenseRt
 
 del *.wixobj
 copy Files.wxs Files.bak
+
+pushd testing-5.0.1
+git clean -dfx .
+popd
 
 copy dist\* testing-5.0.1\bin\*
 

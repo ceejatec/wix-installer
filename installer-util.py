@@ -34,7 +34,7 @@ def do_fixpaths(install_dir):
   # Replace build-machine install path with target installation dir
   for line in fileinput.input(full_files, inplace=1):
     line = path_regex.sub(install_dir, line)
-    print backslash_regex.sub("/", line)
+    print backslash_regex.sub("/", line),
 
   # Finally, copy erl.ini into the erts dist directory as well
   shutil.copy(os.path.join(install_dir, "bin", "erl.ini"),
