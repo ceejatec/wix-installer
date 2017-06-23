@@ -63,7 +63,7 @@
     </Feature>
 
     <!-- Custom action to fix up config files based on installation dir -->
-    <!-- See fixpaths.py for explanation of the FOO here -->
+    <!-- See installer-util.py for explanation of the FOO here -->
     <SetProperty Id="FixConfig" Value="&quot;[INSTALLDIR]bin\installer-util.exe&quot; &quot;[INSTALLDIR]FOO&quot; fixpaths" Before="FixConfig" Sequence="execute"/>
     <CustomAction Id="FixConfig" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check"/>
 
@@ -73,7 +73,7 @@
     <InstallExecuteSequence>
       <!-- Actions to do when REMOVE set, ie. Uninstall or Major Upgrade -->
 
-      <!-- Actions to do when REMOVE set but *not* an Upgrade -->
+      <!-- Actions to do on uninstall ONLY (not upgrade, not repair) -->
       <Custom Action="BackupVar" Before="RemoveFiles">REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE</Custom>
 
       <!-- Actions to do when not installed, ie. fresh Install or Major Upgrade -->
