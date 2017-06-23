@@ -10,11 +10,12 @@ pushd testing-5.0.0
 git clean -dfx .
 popd
 
-copy dist\* testing-5.0.0\bin\*
-
 heat dir %destdir500% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
-candle -arch x64 -dVersion=5.0.0 *.wxs || goto :error
-light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -dWixUILicenseRtf=..\CouchbaseEnterpriseLicense.rtf -o 500.msi *.wixobj || goto :error
+heat dir dist -srd -suid -ag -sreg -ke -cg InstallerUtil -dr BINDIR -out Util.wxs || goto :error
+candle -ext WixUtilExtension -arch x64 -dVersion=5.0.0 *.wxs || goto :error
+light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -b dist -dWixUILicenseRtf=..\CouchbaseEnterpriseLicense.rtf -o 500.msi *.wixobj || goto :error
+
+exit /b 0
 
 del *.wixobj
 copy Files.wxs Files.bak
