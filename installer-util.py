@@ -4,6 +4,8 @@ import os
 import re
 import shutil
 import fileinput
+import socket
+import time
 
 """
 Functions meant to be called by various stages of the Windows installer.
@@ -40,10 +42,24 @@ def do_fixpaths(install_dir):
   shutil.copy(os.path.join(install_dir, "bin", "erl.ini"),
     os.path.join(install_dir, "erts-5.10.4.0.0.1", "bin"))
 
+def do_wait_for_server(install_dir):
+  """
+  Waits for localhost:8091 to start responding, up to 15 seconds
+  """
+  s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  for i in range(15):
+    try:
+      s.connect(("127.0.0.1", 8091))
+      break
+    except socket.error:
+      print("Got an error")
+      time.sleep(.8)
+
 if __name__ == "__main__":
   functions = {
       "backup-var": do_backup_var,
-      "fixpaths": do_fixpaths
+      "fixpaths": do_fixpaths,
+      "wait-for-server": do_wait_for_server
   }
   parser = argparse.ArgumentParser()
   parser.add_argument('install_dir', type=str)
