@@ -10,7 +10,7 @@
         Comments="Couchbase is a registered trademark of Couchbase Inc."
         Manufacturer="Couchbase Inc."
         Platform="x64"
-        InstallerVersion="405" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
+        InstallerVersion="500" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
 
     <Media Id="1" Cabinet="Couchbase.cab" EmbedCab="yes" DiskPrompt="Only file"/>
     <Property Id="DiskPrompt" Value="$(var.Company) $(var.ProductName) $(var.Version) Installation [1]"/>
@@ -27,14 +27,6 @@
       </DirectorySearch>
     </Property>
     <Condition Message="To install Couchbase Server, the Microsoft Universal C Runtime must be installed. This is delivered by Microsoft via Windows Update. Please ensure your system is up to date. For more detailed installation instructions, see http://bitly.com/2j8mZtT .">UCRT32EXISTS OR UCRT64EXISTS</Condition>
-
-    <!-- Icon for Add/Remove dialog -->
-    <Icon Id="icon.ico" SourceFile="$(sys.CURRENTDIR)\assets\couchbase.ico"/>
-    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
-    <Property Id="ARPURLINFOABOUT" Value="http://www.couchbase.com/"/>
-
-    <!-- Graphics for installer itself -->
-    <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\assets\cb_installer_bg.jpg"/>
 
     <MajorUpgrade Schedule="afterInstallExecute"
         DowngradeErrorMessage="A later version of $(var.Company) $(var.ProductName) is already installed. Setup will now exit."/>
@@ -83,10 +75,32 @@
 
     </InstallExecuteSequence>
 
-    <!-- Load in "InstallDir" UI toolkit -->
+    <!-- User Interface stuff below -->
+
+    <!-- Icon for Add/Remove dialog -->
+    <Icon Id="icon.ico" SourceFile="$(sys.CURRENTDIR)\assets\couchbase.ico"/>
+    <Property Id="ARPPRODUCTICON" Value="icon.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="http://www.couchbase.com/"/>
+
+    <!-- Graphics for installer itself -->
+    <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\assets\cb_installer_bg.jpg"/>
+
+    <!-- Text message for our custom exit dialog -->
+    <Property Id="HYPERLINK_EXITDIALOGOPTIONALTEXT">
+        <![CDATA[Hello, I want to go to <a href="http://www.google.com/">Google</a>!!!<p>This is more
+      
+      
+testing, and I want to see<br> if I can have a nice long description
+
+here which spans a number of lines. And how many lines is that, anyway? Lorem ipsur hypochondriac forensic evidence which will not actually tell me anything interesting. Heyllo.]]>
+    </Property>
+
+    <!-- Specify which property should be modifiable by the user in UI -->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>
-    <UIRef Id="WixUI_InstallDir"/>
-    <UIRef Id="WixUI_ErrorProgressText"/>
+
+    <!-- Finally load our custom UI sequence -->
+    <UIRef Id="Couchbase_UISequence"/>
+
 
   </Product>
 </Wix>
