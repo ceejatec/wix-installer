@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?define Company = "Couchbase"?>
-  <?define ProductName = "Servitor"?>
+  <?ifndef Company ?>
+    <?define Company = "Couchbase"?>
+  <?endif?>
+  <?ifndef ProductName ?>
+    <?define ProductName = "Servitor"?>
+  <?endif?>
 </Include>
