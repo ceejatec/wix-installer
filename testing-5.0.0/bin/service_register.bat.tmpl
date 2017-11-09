@@ -1,0 +1,25 @@
+set NS_BIN=%~dp0
+set NS_ROOT=%NS_BIN%..
+set NS_ERTS=%NS_ROOT%\erts-<ERLANG_VER>\bin
+pushd "%NS_ROOT%"
+
+setlocal enabledelayedexpansion
+set PLUGIN_EXTRA=
+for /f %%a in ('dir /b lib\couchdb\plugins') do (
+if exist lib\couchdb\plugins\%%a\ebin set PLUGIN_EXTRA=!PLUGIN_EXTRA! ../lib/couchdb/plugins/%%a/ebin
+if exist lib\couchdb\plugins\%%a\deps set PLUGIN_EXTRA=!PLUGIN_EXTRA! ../lib/couchdb/plugins/%%a/deps
+)
+
+"%NS_ERTS%\erlsrv.exe" add CouchbaseServer -stopaction "ns_babysitter_bootstrap:stop()." -name babysitter_of_ns_1@${LOCALHOST} -InternalServiceName CouchbaseServer -onfail restart -workdir "%NS_ROOT%\bin" -args "-proto_dist ${IPPROTO} -hidden +A 16 +P 327680 -env ERL_FULLSWEEP_AFTER 512 -env ERL_MAX_PORTS 10000 -pa %PLUGIN_EXTRA% -sasl -setcookie nocookie -ns_babysitter cookiefile \\\"../var/lib/couchbase/couchbase-server.cookie\\\" -ns_server ipv6 ${NSIPV6} config_path \\\"../etc/couchbase/static_config\\\" -couch_ini ../etc/couchdb/default.ini ../etc/couchdb/local.ini ../etc/couchdb/default.d/geocouch.ini ../etc/couchdb/default.d/capi.ini ../etc/runtime.ini -kernel inet_dist_listen_min 21100 inet_dist_listen_max 21299 -run ns_babysitter_bootstrap override_resolver -- %1 %2 %3 %4 %5 %6 %7 %8 %9" || goto :error
+
+set serviceId=""
+for /f "tokens=2 delims==" %%s in ('sc GetKeyName CouchbaseServer') do set serviceId=%%s
+sc description %serviceId% "Couchbase Server Service" || goto :error
+
+goto :eof
+
+:error
+echo Failed with error %ERRORLEVEL%.
+exit /b %ERRORLEVEL%
+
+:eof

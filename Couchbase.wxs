@@ -29,6 +29,9 @@
     </Property>
     <Condition Message="To install Couchbase Server, the Microsoft Universal C Runtime must be installed. This is delivered by Microsoft via Windows Update. Please ensure your system is up to date. For more detailed installation instructions, see http://bitly.com/2j8mZtT .">UCRT32EXISTS OR UCRT64EXISTS</Condition>
 
+    <!-- Property for selecting IPv6 or not -->
+    <Property Id="USE_IPV6" Value="false" Admin="yes" Secure="yes"/>
+
     <MajorUpgrade Schedule="afterInstallExecute"
         DowngradeErrorMessage="A later version of $(var.Company) $(var.ProductName) is already installed. Setup will now exit."/>
 
@@ -95,6 +98,12 @@
     <!-- Custom action to backup var dir -->
     <SetProperty Id="BackupVar" Value="&quot;[INSTALLDIR]bin\installer-util.exe&quot; &quot;[INSTALLDIR]FOO&quot; backup-var" Before="BackupVar" Sequence="execute"/>
     <CustomAction Id="BackupVar" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check" Impersonate="no"/>
+
+    <!-- Custom action to configure service-register script from template -->
+    <!-- See installer-util.py for explanation of the FOO here -->
+    <SetProperty Id="CreateRegisterScript" Value="&quot;[INSTALLDIR]bin\installer-util.exe&quot; &quot;[INSTALLDIR]FOO&quot; createregisterscript [USE_IPV6]" Before="CreateRegisterScript" Sequence="execute"/>
+    <CustomAction Id="CreateRegisterScript" Execute="deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Return="check" Impersonate="no"/>
+
     <InstallExecuteSequence>
       <!-- Actions to do when REMOVE set, ie. Uninstall or Major Upgrade -->
 
@@ -105,6 +114,9 @@
 
       <!-- Fix Config files -->
       <Custom Action="FixConfig" After="InstallFiles">NOT Installed</Custom>
+
+      <!-- Create register-service script from template -->
+      <Custom Action="CreateRegisterScript" After="FixConfig">NOT Installed</Custom>
 
     </InstallExecuteSequence>
 
