@@ -13,8 +13,7 @@
         Platform="x64"
         InstallerVersion="500" Languages="1033" Compressed="yes" SummaryCodepage="1252"/>
 
-    <Media Id="1" Cabinet="Couchbase.cab" EmbedCab="yes" DiskPrompt="Only file"/>
-    <Property Id="DiskPrompt" Value="$(var.Company) $(var.ProductName) $(var.Version) Installation [1]"/>
+    <MediaTemplate EmbedCab="yes"/>
 
     <!-- Search for ucrtbase.dll to identify whether Universal CRT is on target -->
     <Property Id="UCRT32EXISTS">
@@ -46,12 +45,7 @@
           </Directory>
         </Directory>
       </Directory>
-      <!-- Additional directory references for the Desktop and Start Menu folders 
-      <Directory Id="ProgramMenuFolder">
-        <Directory Id="ApplicationProgramsFolder" Name="$(var.Company) $(var.ProductName)"/>
-      </Directory> -->
-      <Directory Id="DesktopFolder" Name="Desktop"/>
-
+      <Directory Id="DesktopFolder"/>
       <Merge Id="VCRedist_140" SourceFile="$(env.CommonProgramFiles(x86))\Merge Modules\Microsoft_VC140_CRT_x64.msm" DiskId="1" Language="0"/>
       <Merge Id="VCRedist_120" SourceFile="$(env.CommonProgramFiles(x86))\Merge Modules\Microsoft_VC120_CRT_x64.msm" DiskId="1" Language="0"/>
       <Merge Id="VCRedist_100" SourceFile="$(env.CommonProgramFiles(x86))\Merge Modules\Microsoft_VC100_CRT_x64.msm" DiskId="1" Language="0"/>
@@ -63,8 +57,8 @@
       <ComponentGroupRef Id="CouchbaseServer"/>
       <!-- All component files from Util.wxs -->
       <ComponentGroupRef Id="InstallerUtil"/>
-      <!-- "Fake" component group for shortcuts -->
-      <ComponentGroupRef Id="Shortcuts"/>
+      <!-- Desktop shortcut -->
+      <ComponentRef Id="Shortcuts"/>
     </Feature>
 
     <Feature Id="VCRedist" Title="Visual C++ Runtimes" AllowAdvertise="no" Display="hidden" Level="1">
@@ -73,22 +67,19 @@
       <MergeRef Id="VCRedist_100"/>
     </Feature>
 
-    <!-- Extra componentgroup for holding the shortcuts -->
-    <SetProperty Id="CONSOLEURL" Value="http://127.0.0.1:8091/" Sequence="execute" Before="CreateShortcuts"/>
-    <ComponentGroup Id="Shortcuts">
-      <Component Id="ShortCuts" Directory="INSTALLDIR" Guid="*">
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL4" Value="http://localhost:8091/" Sequence="ui" After="CostFinalize">USE_IPV6="false"</SetProperty>
+    <!-- This URL should be http://[::1]:8091/ for IPv6, but Windows Installer escaping is extra-ugly -->
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL6" Value="http://[\[]::1[\]]:8091/" Sequence="ui" After="CostFinalize">USE_IPV6="true"</SetProperty>
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="Shortcuts" Guid="*">
         <RegistryValue Root="HKCU" Key="Software\$(var.Company)\$(var.ProductName)" Name="shortcut" Type="integer" Value="1" KeyPath="yes"/>
-        <!--util:InternetShortcut Id="ConsoleShortcut"
-          Name="$(var.Company) $(var.ProductName) Console"
-          Directory="DesktopFolder"
-          Target="http://127.0.0.1:8091/"/ -->
-        <Shortcut Directory="DesktopFolder" Id="ConsoleShortcut"
+        <Shortcut Id="ConsoleShortcut"
           Name="$(var.Company) $(var.ProductName) Console"
           Description="Where is this description"
           Target="[CONSOLEURL]"
           Icon="CouchbaseIcon"/>
       </Component>
-    </ComponentGroup>
+    </DirectoryRef>
 
     <!-- Custom action to fix up config files based on installation dir -->
     <!-- See installer-util.py for explanation of the FOO here -->
@@ -129,16 +120,6 @@
 
     <!-- Graphics for installer itself -->
     <WixVariable Id="WixUIDialogBmp" Value="$(sys.CURRENTDIR)\assets\cb_installer_bg.jpg"/>
-
-    <!-- Text message for our custom exit dialog -->
-    <Property Id="HYPERLINK_EXITDIALOGOPTIONALTEXT">
-        <![CDATA[Hello, I want to go to <a href="http://www.google.com/">Google</a>!!!<p>This is more
-      
-      
-testing, and I want to see<br> if I can have a nice long description
-
-here which spans a number of lines. And how many lines is that, anyway? Lorem ipsur hypochondriac forensic evidence which will not actually tell me anything interesting. Heyllo.]]>
-    </Property>
 
     <!-- Specify which property should be modifiable by the user in UI -->
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR"/>

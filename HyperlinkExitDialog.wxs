@@ -13,8 +13,12 @@
                 <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
 
                 <Control Id="Title" Type="Text" X="135" Y="20" Width="220" Height="60" Transparent="yes" NoPrefix="yes" Text="!(loc.ExitDialogTitle)" />
-                <Control Id="OptionalText" Type="Hyperlink" X="135" Y="70" Width="220" Height="120" Transparent="yes" Hidden="yes" Text="[HYPERLINK_EXITDIALOGOPTIONALTEXT]">
-                    <Condition Action="show">HYPERLINK_EXITDIALOGOPTIONALTEXT AND NOT Installed</Condition>
+                <Control Id="Text" Type="Hyperlink" X="135" Y="70" Width="220" Height="120" Transparent="yes">
+                    <Text><![CDATA[Hello, I want to go to <a href="[CONSOLEURL]">spoo [CONSOLEURL]</a>!!!
+                    
+                    This is more testing, and I want to see
+                    if I can have a nice long description here which spans a number of lines. And how many lines is that, anyway? Lorem ipsur hypochondriac forensic evidence which will not actually tell me anything interesting. Heyllo.]]>
+                    </Text>
                 </Control>
                 <Control Id="OptionalCheckBox" Type="CheckBox" X="135" Y="190" Width="220" Height="40" Hidden="yes" Property="HYPERLINK_EXITDIALOGOPTIONALCHECKBOX" CheckBoxValue="1" Text="[HYPER_EXITDIALOGOPTIONALCHECKBOXTEXT]">
                     <Condition Action="show">HYPERLINK_EXITDIALOGOPTIONALCHECKBOXTEXT AND NOT Installed</Condition>
