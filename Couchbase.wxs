@@ -67,9 +67,9 @@
       <MergeRef Id="VCRedist_100"/>
     </Feature>
 
-    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL4" Value="http://localhost:8091/" Sequence="ui" After="CostFinalize">USE_IPV6="false"</SetProperty>
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL4" Value="http://localhost:8091/" Sequence="ui" Before="ExecuteAction">USE_IPV6="false"</SetProperty>
     <!-- This URL should be http://[::1]:8091/ for IPv6, but Windows Installer escaping is extra-ugly -->
-    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL6" Value="http://[\[]::1[\]]:8091/" Sequence="ui" After="CostFinalize">USE_IPV6="true"</SetProperty>
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL6" Value="http://[\[]::1[\]]:8091/" Sequence="ui" Before="ExecuteAction">USE_IPV6="true"</SetProperty>
     <DirectoryRef Id="DesktopFolder">
       <Component Id="Shortcuts" Guid="*">
         <RegistryValue Root="HKCU" Key="Software\$(var.Company)\$(var.ProductName)" Name="shortcut" Type="integer" Value="1" KeyPath="yes"/>
