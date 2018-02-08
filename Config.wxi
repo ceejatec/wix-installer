@@ -6,4 +6,12 @@
   <?ifndef ProductName ?>
     <?define ProductName = "Servitor"?>
   <?endif?>
+
+  <?if $(var.Edition) = "Enterprise" ?>
+    <?define InstallDirDlgNext = "IPSelectDialog"?>
+    <?define VerifyReadyDlgPrev = "IPSelectDialog"?>
+  <?else?>
+    <?define InstallDirDlgNext = "VerifyReadyDlg"?>
+    <?define VerifyReadyDlgPrev = "InstallDirDlg"?>
+  <?endif?>  
 </Include>

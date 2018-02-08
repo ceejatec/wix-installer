@@ -3,11 +3,11 @@
      xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
 
   <?include $(sys.CURRENTDIR)\Config.wxi?>
-  <Product Id="*" Name="$(var.Company) $(var.ProductName)" Version="$(var.Version)" Manufacturer="Couchbase Inc."
+  <Product Id="*" Name="$(var.Company) $(var.ProductName) $(var.Edition) Edition" Version="$(var.Version)" Manufacturer="Couchbase Inc."
       UpgradeCode="01510917-D2BC-91D4-FD65-4743E498A007"
       Language="1033" Codepage="1252">
 
-    <Package Id="*" Keywords="Installer" Description="$(var.Company) $(var.ProductName) $(var.Version) Installer"
+    <Package Id="*" Keywords="Installer" Description="$(var.Company) $(var.ProductName) $(var.Edition) Edition $(var.Version) Installer"
         Comments="Couchbase is a registered trademark of Couchbase Inc."
         Manufacturer="Couchbase Inc."
         Platform="x64"
@@ -30,6 +30,8 @@
 
     <!-- Property for selecting IPv6 or not -->
     <Property Id="USE_IPV6" Value="false" Admin="yes" Secure="yes"/>
+    <!-- Override property value at runtime for CE -->
+    <SetProperty Id="USE_IPV6" Value="false" Before="CostInitialize"><![CDATA["$(var.Edition)" <> "Enterprise"]]></SetProperty>
 
     <MajorUpgrade Schedule="afterInstallExecute"
         DowngradeErrorMessage="A later version of $(var.Company) $(var.ProductName) is already installed. Setup will now exit."/>
@@ -67,9 +69,9 @@
       <MergeRef Id="VCRedist_100"/>
     </Feature>
 
-    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL4" Value="http://localhost:8091/" Sequence="ui" Before="ExecuteAction">USE_IPV6="false"</SetProperty>
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL4" Value="http://localhost:8091/" After="CostFinalize">USE_IPV6="false"</SetProperty>
     <!-- This URL should be http://[::1]:8091/ for IPv6, but Windows Installer escaping is extra-ugly -->
-    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL6" Value="http://[\[]::1[\]]:8091/" Sequence="ui" Before="ExecuteAction">USE_IPV6="true"</SetProperty>
+    <SetProperty Id="CONSOLEURL" Action="SETCONSOLEURL6" Value="http://[\[]::1[\]]:8091/" After="CostFinalize">USE_IPV6="true"</SetProperty>
     <DirectoryRef Id="DesktopFolder">
       <Component Id="Shortcuts" Guid="*">
         <RegistryValue Root="HKCU" Key="Software\$(var.Company)\$(var.ProductName)" Name="shortcut" Type="integer" Value="1" KeyPath="yes"/>
