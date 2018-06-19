@@ -31,13 +31,13 @@ def do_fixpaths(install_dir, _):
     'bin/erl.ini'
   ]
   full_files = [os.path.join(install_dir, fname) for fname in files]
-  path_regex = re.compile(r"C:/Jenkins/workspace/.*windows/install")
-  backslash_regex = re.compile(r"\\")
+  slave_dir= r'@INSTALL_DIR@'.replace('\\', '/')
+  path_regex = re.compile(re.escape(slave_dir))
+  install_dir = install_dir.replace('\\', '/')
 
   # Replace build-machine install path with target installation dir
   for line in fileinput.input(full_files, inplace=1):
-    line = path_regex.sub(install_dir, line)
-    print backslash_regex.sub("/", line),
+    print path_regex.sub(install_dir, line),
 
   # Finally, copy erl.ini into the erts dist directory as well
   shutil.copy(os.path.join(install_dir, "bin", "erl.ini"),

@@ -4,6 +4,7 @@ set destdir501=%~dp0\testing-5.0.1
 set productname=%~1
 if "%productname%"=="" set productname=Server
 
+cmake -D tmpl_file=installer-util.py.tmpl -D target_file=installer-util.py -D INSTALL_DIR=%destdir500% -P copy_template.cmake
 rmdir /s /q build
 rmdir /s /q dist
 python installer-util-setup.py py2exe || goto :error

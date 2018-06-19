@@ -1,5 +1,7 @@
 Files.wxs
 Files.bak
+installer-util.py
+output.log
 *.msi
 *.wixobj
 *.wixpdb
