@@ -1,13 +1,6 @@
 Files.wxs
 Files.bak
-installer-util.py
 output.log
 *.msi
 *.wixobj
 *.wixpdb
-dist
-build
-testing-5.0.*/bin/*.pyd
-testing-5.0.*/bin/*.exe
-testing-5.0.*/bin/*.zip
-testing-5.0.*/bin/*.dll

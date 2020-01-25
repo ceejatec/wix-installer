@@ -1,23 +1,13 @@
 set destdir500=%~dp0\testing-5.0.0
 set destdir501=%~dp0\testing-5.0.1
 
-set productname=%~1
-if "%productname%"=="" set productname=Server
-
-cmake -D tmpl_file=installer-util.py.tmpl -D target_file=installer-util.py -D INSTALL_DIR=%destdir500% -P copy_template.cmake
-rmdir /s /q build
-rmdir /s /q dist
-python installer-util-setup.py py2exe || goto :error
-rmdir /s /q build
-
 pushd testing-5.0.0
 git clean -dfx .
 popd
 
 heat dir %destdir500% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
-heat dir dist -srd -suid -ag -sreg -ke -cg InstallerUtil -dr BINDIR -out Util.wxs || goto :error
-candle -ext WixUtilExtension -arch x64 -dVersion=5.0.0.5759 -dProductName="%productname%" -dEdition=Community *.wxs || goto :error
-light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -b dist -dWixUILicenseRtf=..\CouchbaseEnterpriseLicense.rtf -o 500.msi *.wixobj || goto :error
+candle -ext WixUtilExtension -arch x64 -dVersion=5.0.0.5759 -dEdition=Community *.wxs || goto :error
+light -ext WixUIExtension -ext WixUtilExtension -b %destdir500% -dWixUILicenseRtf=..\CouchbaseEnterpriseLicense.rtf -o 500.msi *.wixobj || goto :error
 
 exit /b 0
 
@@ -27,8 +17,6 @@ copy Files.wxs Files.bak
 pushd testing-5.0.1
 git clean -dfx .
 popd
-
-copy dist\* testing-5.0.1\bin\*
 
 heat dir %destdir501% -srd -suid -ag -sreg -ke -cg CouchbaseServer -dr INSTALLDIR -out Files.wxs || goto :error
 candle -arch x64 -dVersion=5.0.1.5759 *.wxs || goto :error

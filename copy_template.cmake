@@ -1,1 +1,0 @@
-CONFIGURE_FILE ("${tmpl_file}" "${target_file}" @ONLY)
